@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EmployeeManagementSystem.Domain.Enums
+﻿namespace EmployeeManagementSystem.Domain.Enums
 {
-    internal class EmployeeRole
+    public enum EmployeeRole
     {
+        Employee,
+        Leader,
+        Director
     }
 }
