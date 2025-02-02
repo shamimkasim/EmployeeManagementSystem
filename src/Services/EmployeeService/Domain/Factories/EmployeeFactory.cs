@@ -1,4 +1,4 @@
-﻿using EmployeeManagementSystem.Domain.Entities;
+using EmployeeManagementSystem.Domain.Entities;
 using EmployeeManagementSystem.Domain.Enums;
 using EmployeeManagementSystem.Domain.ValueObjects;
 using EmployeeManagementSystem.Domain.Guards;
@@ -12,7 +12,6 @@ namespace EmployeeManagementSystem.Domain.Factories
         public static Employee Create(string firstName, string lastName, string email, string documentNumber,
             List<PhoneNumber> phoneNumbers, DateTime dateOfBirth, EmployeeRole role, Guid? managerId)
         {
-            // Apply Guard Clauses (DRY principle)
             Guard.AgainstNullOrEmpty(firstName, "First Name");
             Guard.AgainstNullOrEmpty(lastName, "Last Name");
             Guard.AgainstNullOrEmpty(email, "Email");

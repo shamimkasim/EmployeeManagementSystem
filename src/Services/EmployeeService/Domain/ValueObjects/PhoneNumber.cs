@@ -6,7 +6,7 @@ namespace EmployeeManagementSystem.Domain.ValueObjects
     {
         public string Number { get; private set; }
 
-        private PhoneNumber() { } // Required by EF Core
+        private PhoneNumber() { } 
 
         public PhoneNumber(string number)
         {

@@ -18,12 +18,9 @@ namespace EmployeeManagementSystem.Domain.Entities
         public EmployeeRole Role { get; private set; }
         public DateTime DateOfBirth { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public DateTime? UpdatedAt { get; private set; }
-
-        // Private constructor (forces usage of Factory)
+        public DateTime? UpdatedAt { get; private set; }        
         private Employee() { }
-
-        // Internal constructor for Factory
+        
         internal Employee(Guid id, string firstName, string lastName, string email, string documentNumber,
             List<PhoneNumber> phoneNumbers, DateTime dateOfBirth, EmployeeRole role, Guid? managerId)
         {

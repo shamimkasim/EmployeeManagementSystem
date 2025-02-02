@@ -5,7 +5,7 @@ namespace EmployeeManagementSystem.Domain.Entities
         public Guid Id { get; private set; }
         public string Name { get; private set; }
 
-        private Role() { } // Required by EF Core
+        private Role() { } 
 
         public Role(string name)
         {
