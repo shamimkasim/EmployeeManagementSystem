@@ -1,5 +1,6 @@
 using EmployeeManagementSystem.Application.Interfaces;
-using BCrypt.Net;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace EmployeeManagementSystem.Infrastructure.Security
 {
@@ -7,12 +8,14 @@ namespace EmployeeManagementSystem.Infrastructure.Security
     {
         public string HashPassword(string password)
         {
-            return BCrypt.Net.BCrypt.HashPassword(password);
+            using var sha256 = SHA256.Create();
+            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return Convert.ToBase64String(hashedBytes);
         }
 
         public bool VerifyPassword(string password, string hashedPassword)
         {
-            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            throw new NotImplementedException();
         }
     }
 }

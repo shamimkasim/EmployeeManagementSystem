@@ -3,6 +3,7 @@ using EmployeeManagementSystem.Application.DTOs.Responses;
 using EmployeeManagementSystem.Application.Interfaces;
 using EmployeeManagementSystem.Domain.Entities;
 using EmployeeManagementSystem.Domain.Factories;
+using EmployeeManagementSystem.Domain.Interfaces;
 using System;
 using System.Threading.Tasks;
 

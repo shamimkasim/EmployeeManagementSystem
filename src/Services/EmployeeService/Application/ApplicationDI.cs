@@ -1,16 +1,20 @@
-using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
+using EmployeeManagementSystem.Application.CQRS.Commands;
+using EmployeeManagementSystem.Application.Validation;
+using Microsoft.Extensions.DependencyInjection;
 using MediatR;
-using System.Reflection;
 
-namespace EmployeeManagementSystem.Application
+namespace EmployeeManagementSystem.Application.IoC
 {
-    public static class ApplicationDI
+    public static class ApplicationDependencyInjection
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddMediatR(cfg => cfg.RequestExceptionActionProcessorStrategy(Assembly.GetExecutingAssembly()));
-            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddMediatR(typeof(ApplicationDependencyInjection).Assembly);
+
+            // Register FluentValidation
+            services.AddValidatorsFromAssembly(typeof(ApplicationDependencyInjection).Assembly);
+
             return services;
         }
     }

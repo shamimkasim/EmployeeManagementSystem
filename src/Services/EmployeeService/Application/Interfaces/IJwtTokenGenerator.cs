@@ -1,4 +1,6 @@
-﻿namespace EmployeeManagementSystem.Application.Interfaces
+﻿using EmployeeManagementSystem.Domain.Entities;
+
+namespace EmployeeManagementSystem.Application.Interfaces
 {
     public interface IJwtTokenGenerator
     {

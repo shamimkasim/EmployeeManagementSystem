@@ -18,7 +18,9 @@ namespace EmployeeManagementSystem.Domain.Entities
         public EmployeeRole Role { get; private set; }
         public DateTime DateOfBirth { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public DateTime? UpdatedAt { get; private set; }        
+        public DateTime? UpdatedAt { get; private set; }
+        public string Password { get; set; }
+        public string PasswordHash { get; set; }
         private Employee() { }
         
         internal Employee(Guid id, string firstName, string lastName, string email, string documentNumber,

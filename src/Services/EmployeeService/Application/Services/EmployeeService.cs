@@ -1,4 +1,6 @@
 using AutoMapper;
+using EmployeeManagementSystem.Application.CQRS.Commands;
+using EmployeeManagementSystem.Application.CQRS.Queries;
 using EmployeeManagementSystem.Application.DTOs.Requests;
 using EmployeeManagementSystem.Application.DTOs.Responses;
 using EmployeeManagementSystem.Application.Interfaces;
@@ -33,7 +35,7 @@ namespace EmployeeManagementSystem.Application.Services
             });
         }
 
-        public Task<EmployeeResponse> CreateEmployeeAsync(CreateEmployeeRequest request)
+        public Task DeleteAsync(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -46,6 +48,11 @@ namespace EmployeeManagementSystem.Application.Services
         public async Task<EmployeeResponse> GetEmployeeByIdAsync(Guid id)
         {
             return await _mediator.Send(new GetEmployeeByIdQuery { EmployeeId = id });
+        }
+
+        public Task<EmployeeResponse> UpdateEmployeeAsync(UpdateEmployeeRequest request)
+        {
+            throw new NotImplementedException();
         }
 
         Task<List<EmployeeResponse>> IEmployeeService.GetAllEmployeesAsync()

@@ -45,9 +45,10 @@ namespace EmployeeManagementSystem.API.Controllers
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateEmployeeRequest request)
         {
             request.Id = id;
-            var result = await _employeeService.CreateEmployeeAsync(request);
+            var result = await _employeeService.UpdateEmployeeAsync(request);
             return Ok(result);
         }
+
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
