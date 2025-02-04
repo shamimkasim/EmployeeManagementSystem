@@ -1,9 +1,11 @@
 ﻿using EmployeeManagementSystem.Application.CQRS.Commands;
 using EmployeeManagementSystem.Application.DTOs.Responses;
+using EmployeeManagementSystem.Domain.Enums;
 using EmployeeManagementSystem.Domain.Factories;
+using EmployeeManagementSystem.Domain.Helpers;
 using EmployeeManagementSystem.Domain.Interfaces;
+using EmployeeManagementSystem.Domain.ValueObjects;
 using MediatR;
-
 
 namespace EmployeeManagementSystem.Application.CQRS.Handlers
 {
@@ -18,9 +20,22 @@ namespace EmployeeManagementSystem.Application.CQRS.Handlers
 
         public async Task<EmployeeResponse> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
         {
+            var phoneNumber = new PhoneNumber(request.PhoneNumber);
+            var role = (EmployeeRole)Enum.Parse(typeof(EmployeeRole), request.Role);
+
+            Guid roleId = RoleHelper.GetRoleIdFromEnum(role);  
+
             var employee = EmployeeFactory.Create(
-                request.FirstName, request.LastName, request.Email, request.DocumentNumber,
-                request.PhoneNumbers, request.DateOfBirth, request.Role, request.ManagerId);
+                request.FirstName,
+                request.LastName,
+                request.Email,
+                request.DocumentNumber,
+                phoneNumber,
+                request.DateOfBirth,
+                roleId,   
+                request.ManagerId,
+                request.PasswordHash
+            );
 
             await _employeeRepository.AddAsync(employee);
 
@@ -30,8 +45,11 @@ namespace EmployeeManagementSystem.Application.CQRS.Handlers
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 Email = employee.Email,
-                Role = employee.Role,
-                PhoneNumbers = employee.PhoneNumbers.ConvertAll(p => p.ToString())
+                DocumentNumber = employee.DocumentNumber,
+                PhoneNumber = employee.PhoneNumber.ToString(),
+                Role = employee.Role.ToString(),   
+                CreatedAt = employee.CreatedAt,
+                UpdatedAt = employee.UpdatedAt
             };
         }
     }

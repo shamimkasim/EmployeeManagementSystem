@@ -1,4 +1,3 @@
-using System.Data;
 using EmployeeManagementSystem.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +14,20 @@ namespace EmployeeManagementSystem.Infrastructure.Persistence
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.Role)
+                .WithMany()
+                .HasForeignKey(e => e.RoleId);
+
+            
+            modelBuilder.Entity<Employee>()
+                .OwnsOne(e => e.PhoneNumber, phone =>
+                {
+                    phone.Property(p => p.Number)
+                         .HasColumnName("PhoneNumber")
+                         .IsRequired();
+                });
         }
     }
 }

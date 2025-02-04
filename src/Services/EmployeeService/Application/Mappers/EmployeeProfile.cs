@@ -1,17 +1,20 @@
 using AutoMapper;
+using EmployeeManagementSystem.Application.CQRS.Commands;
+using EmployeeManagementSystem.Application.CQRS.Handlers;
 using EmployeeManagementSystem.Application.DTOs.Requests;
-using EmployeeManagementSystem.Application.DTOs.Responses;
-using EmployeeManagementSystem.Domain.Entities;
+using EmployeeManagementSystem.Domain.ValueObjects;
 
-namespace EmployeeManagementSystem.Application.Mappers
+namespace EmployeeManagementSystem.Application.Mappings
 {
     public class EmployeeProfile : Profile
     {
         public EmployeeProfile()
         {
-            CreateMap<CreateEmployeeRequest, Employee>();
-            CreateMap<UpdateEmployeeRequest, Employee>();
-            CreateMap<Employee, EmployeeResponse>();
+            CreateMap<CreateEmployeeRequest, CreateEmployeeCommand>()
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => new PhoneNumber(src.PhoneNumber)));
+
+            CreateMap<UpdateEmployeeRequest, UpdateEmployeeCommand>()
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => new PhoneNumber(src.PhoneNumber)));
         }
     }
 }

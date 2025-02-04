@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 
 namespace EmployeeManagementSystem.Infrastructure.Persistence
@@ -9,14 +10,14 @@ namespace EmployeeManagementSystem.Infrastructure.Persistence
     {
         public AppDbContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-
-            // Assuming the connection string is stored in appsettings.json
+            var basePath = Directory.GetCurrentDirectory();
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory()) // Directory for migration
-                .AddJsonFile("appsettings.json") // Or appsettings.Development.json for local dev
-                .Build();
+            .SetBasePath(basePath) // Ensure it points to the API project
+            .AddJsonFile(Path.Combine(basePath, "../API/appsettings.json"), optional: false, reloadOnChange: true)
+            .Build();
 
+
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 
             return new AppDbContext(optionsBuilder.Options);

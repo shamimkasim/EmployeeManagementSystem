@@ -1,81 +1,103 @@
-using EmployeeManagementSystem.Application.IoC;
- 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using EmployeeManagementSystem.API.Middleware;
-using EmployeeManagementSystem.Infrastructure;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using EmployeeManagementSystem.API.Middleware;
+using EmployeeManagementSystem.Application.IoC;
+using EmployeeManagementSystem.Infrastructure.IoC;
+using EmployeeManagementSystem.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Load configuration
 var configuration = builder.Configuration;
 
-// Add services from IoC
+// Configure Database Context
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+        b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+
+// Register Services
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(configuration);
 
-// Add Controllers
+// CORS Policy
+const string CorsPolicy = "AllowAll";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicy, policy =>
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader());
+});
+
+// Configure Controllers & API Exploration
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// Configure Swagger with JWT Authentication
+// Configure Swagger for JWT Authentication
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Employee Management API", Version = "v1" });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+
+    var securityScheme = new OpenApiSecurityScheme
     {
         Description = "Enter 'Bearer {token}'",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
-        Scheme = "Bearer"
-    });
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+    };
+
+    c.AddSecurityDefinition("Bearer", securityScheme);
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-            },
-            new string[] {}
-        }
+        { securityScheme, Array.Empty<string>() }
     });
 });
 
-// Configure JWT Authentication
+// Configure Authentication & Authorization
+var jwtSettings = configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not found."));
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment(); // Secure in production
+        options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"])),
+            IssuerSigningKey = new SymmetricSecurityKey(key),
             ValidateIssuer = true,
-            ValidIssuer = configuration["Jwt:Issuer"],
+            ValidIssuer = jwtSettings["Issuer"],
             ValidateAudience = true,
-            ValidAudience = configuration["Jwt:Audience"],
-            ValidateLifetime = true
+            ValidAudience = jwtSettings["Audience"],
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
         };
     });
-
 
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Middleware setup
-app.UseSwagger();
-app.UseSwaggerUI();
+// Middleware Execution Order
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseCors(CorsPolicy);
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<LoggingMiddleware>();
-app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 

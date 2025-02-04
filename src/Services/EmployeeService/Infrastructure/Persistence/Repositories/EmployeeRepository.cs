@@ -15,7 +15,9 @@ namespace EmployeeManagementSystem.Infrastructure.Persistence.Repositories
 
         public async Task<Employee?> GetByIdAsync(Guid id)
         {
-            return await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
+            return await _context.Employees
+         .Include(e => e.Role)
+         .FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task<Employee?> GetByEmailAsync(string email)
@@ -32,8 +34,13 @@ namespace EmployeeManagementSystem.Infrastructure.Persistence.Repositories
         {
             await _context.Employees.AddAsync(employee);
             await _context.SaveChangesAsync();
-        }
 
+             
+            employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == employee.Id);
+
+            if (employee == null)
+                throw new NullReferenceException("Failed to retrieve employee after saving.");
+        }
         public async Task UpdateAsync(Employee employee)
         {
             _context.Employees.Update(employee);
@@ -48,6 +55,10 @@ namespace EmployeeManagementSystem.Infrastructure.Persistence.Repositories
                 _context.Employees.Remove(employee);
                 await _context.SaveChangesAsync();
             }
+        }
+        public async Task<bool> RoleExistsAsync(Guid roleId)
+        {
+            return await _context.Roles.AnyAsync(r => r.Id == roleId);
         }
     }
 }

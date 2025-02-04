@@ -1,9 +1,6 @@
 ﻿using EmployeeManagementSystem.Application.CQRS.Commands;
-using EmployeeManagementSystem.Application.Interfaces;
 using EmployeeManagementSystem.Domain.Interfaces;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace EmployeeManagementSystem.Application.CQRS.Handlers
 {

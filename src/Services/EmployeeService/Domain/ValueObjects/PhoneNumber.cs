@@ -1,27 +1,26 @@
 using System;
+using System.Text.RegularExpressions;
 
 namespace EmployeeManagementSystem.Domain.ValueObjects
 {
     public class PhoneNumber
     {
+        private static readonly Regex PhoneNumberRegex = new(@"^\+?\d{7,15}$");  
+
         public string Number { get; private set; }
 
-        private PhoneNumber() { } 
+       
+        private PhoneNumber() { }
 
         public PhoneNumber(string number)
         {
             if (string.IsNullOrWhiteSpace(number))
                 throw new ArgumentException("Phone number cannot be empty.");
 
-            if (!IsValidPhoneNumber(number))
+            if (!PhoneNumberRegex.IsMatch(number))
                 throw new ArgumentException("Invalid phone number format.");
 
             Number = number;
-        }
-
-        private bool IsValidPhoneNumber(string number)
-        {
-            return number.Length >= 10 && number.Length <= 15;
         }
 
         public override string ToString() => Number;

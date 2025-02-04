@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace EmployeeManagementSystem.Infrastructure.Auth
 {
-    public class JwtTokenGenerator: IJwtTokenGenerator
+    public class JwtTokenGenerator : IJwtTokenGenerator
     {
         private readonly IConfiguration _configuration;
 
@@ -19,23 +19,28 @@ namespace EmployeeManagementSystem.Infrastructure.Auth
 
         public string GenerateToken(Employee employee)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            if (employee == null)
+                throw new ArgumentNullException(nameof(employee), "Employee object cannot be null");
 
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, employee.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, employee.Email),
-                new Claim(ClaimTypes.Role, employee.Role.ToString()),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
+            var secretKey = _configuration["Jwt:SecretKey"];
+            if (string.IsNullOrEmpty(secretKey) || secretKey.Length < 32)
+                throw new ArgumentException("JWT Secret Key must be at least 32 characters long. Update `appsettings.json`.");
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.UtcNow.AddMinutes(60);
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(2),
-                signingCredentials: credentials
+                claims: new List<Claim>
+                {
+                new Claim(JwtRegisteredClaimNames.Sub, employee.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, employee.Email),
+                new Claim("role", employee.RoleId.ToString())
+                },
+                expires: expires,
+                signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);

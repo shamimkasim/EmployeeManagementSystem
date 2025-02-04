@@ -10,5 +10,6 @@ namespace EmployeeManagementSystem.Domain.Interfaces
         Task AddAsync(Employee employee);
         Task UpdateAsync(Employee employee);
         Task DeleteAsync(Guid id);
+        Task<bool> RoleExistsAsync(Guid roleId);
     }
 }

@@ -1,11 +1,15 @@
-using EmployeeManagementSystem.Application.DTOs.Responses;
+﻿using EmployeeManagementSystem.Application.DTOs.Responses;
 using MediatR;
-using System;
 
-namespace EmployeeManagementSystem.Application.CQRS.Queries
+namespace EmployeeManagementSystem.Application.CQRS.Handlers
 {
     public class GetEmployeeByIdQuery : IRequest<EmployeeResponse>
     {
-        public Guid EmployeeId { get; set; }
+        public Guid EmployeeId { get;}
+
+        public GetEmployeeByIdQuery(Guid employeeId)
+        {
+            EmployeeId = employeeId;
+        }
     }
 }

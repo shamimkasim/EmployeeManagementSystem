@@ -1,13 +1,9 @@
-﻿using EmployeeManagementSystem.Application.CQRS.Commands;
-using EmployeeManagementSystem.Application.DTOs.Responses;
-using EmployeeManagementSystem.Application.Interfaces;
-using EmployeeManagementSystem.Domain.Interfaces;
-using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-using EmployeeManagementSystem.Application.CQRS.Commands;
-using EmployeeManagementSystem.Domain.ValueObjects;
+﻿using EmployeeManagementSystem.Application.DTOs.Responses;
 using EmployeeManagementSystem.Domain.Enums;
+using EmployeeManagementSystem.Domain.Helpers;
+using EmployeeManagementSystem.Domain.Interfaces;
+using EmployeeManagementSystem.Domain.ValueObjects;
+using MediatR;
 
 namespace EmployeeManagementSystem.Application.CQRS.Handlers
 {
@@ -26,7 +22,19 @@ namespace EmployeeManagementSystem.Application.CQRS.Handlers
             if (employee == null)
                 throw new KeyNotFoundException("Employee not found.");
 
-            employee.Update(request.FirstName, request.LastName, request.PhoneNumbers.Select(p => new PhoneNumber(p)).ToList(), (EmployeeRole)Enum.Parse(typeof(EmployeeRole), request.Role));
+            var phoneNumber = new PhoneNumber(request.PhoneNumber);
+            Guid roleId = RoleHelper.GetRoleIdFromEnum((EmployeeRole)Enum.Parse(typeof(EmployeeRole), request.Role));
+
+
+
+            employee.Update(
+             request.FirstName,
+             request.LastName,
+             phoneNumber,
+             roleId
+         );
+
+
             await _employeeRepository.UpdateAsync(employee);
 
             return new EmployeeResponse
@@ -35,8 +43,11 @@ namespace EmployeeManagementSystem.Application.CQRS.Handlers
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 Email = employee.Email,
-                Role = employee.Role,
-                PhoneNumbers = employee.PhoneNumbers.ConvertAll(p => p.ToString())
+                DocumentNumber = employee.DocumentNumber,
+                PhoneNumber = employee.PhoneNumber.ToString(),
+                Role = employee.Role.ToString(),
+                CreatedAt = employee.CreatedAt,
+                UpdatedAt = employee.UpdatedAt
             };
         }
     }

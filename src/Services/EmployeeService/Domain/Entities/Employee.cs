@@ -1,8 +1,5 @@
-using EmployeeManagementSystem.Domain.Enums;
+﻿using System;
 using EmployeeManagementSystem.Domain.ValueObjects;
-using EmployeeManagementSystem.Domain.Guards;
-using System;
-using System.Collections.Generic;
 
 namespace EmployeeManagementSystem.Domain.Entities
 {
@@ -13,37 +10,40 @@ namespace EmployeeManagementSystem.Domain.Entities
         public string LastName { get; private set; }
         public string Email { get; private set; }
         public string DocumentNumber { get; private set; }
-        public List<PhoneNumber> PhoneNumbers { get; private set; }
+        public PhoneNumber PhoneNumber { get; private set; }   
+        public Guid RoleId { get; private set; }
         public Guid? ManagerId { get; private set; }
-        public EmployeeRole Role { get; private set; }
         public DateTime DateOfBirth { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
-        public string Password { get; set; }
-        public string PasswordHash { get; set; }
-        private Employee() { }
-        
-        internal Employee(Guid id, string firstName, string lastName, string email, string documentNumber,
-            List<PhoneNumber> phoneNumbers, DateTime dateOfBirth, EmployeeRole role, Guid? managerId)
+        public string PasswordHash { get; private set; }
+
+         
+        public Role Role { get; private set; }
+
+        private Employee() { }  
+
+        public Employee(Guid id, string firstName, string lastName, string email, string documentNumber,
+            PhoneNumber phoneNumber, DateTime dateOfBirth, Guid roleId, Guid? managerId, string passwordHash)
         {
             Id = id;
             FirstName = firstName;
             LastName = lastName;
             Email = email;
             DocumentNumber = documentNumber;
-            PhoneNumbers = phoneNumbers;
+            PhoneNumber = phoneNumber;   
             DateOfBirth = dateOfBirth;
-            Role = role;
+            RoleId = roleId;
             ManagerId = managerId;
             CreatedAt = DateTime.UtcNow;
+            PasswordHash = passwordHash;
         }
 
-        public void Update(string firstName, string lastName, List<PhoneNumber> phoneNumbers, EmployeeRole role)
+        public void Update(string firstName, string lastName, PhoneNumber phoneNumber, Guid roleId)
         {
             FirstName = firstName;
             LastName = lastName;
-            PhoneNumbers = phoneNumbers;
-            Role = role;
+            PhoneNumber = phoneNumber;   
             UpdatedAt = DateTime.UtcNow;
         }
     }
