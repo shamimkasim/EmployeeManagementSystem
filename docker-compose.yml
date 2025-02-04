@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "YourStrongPassword"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  employeemanagement:
+    depends_on:
+      - sqlserver
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection="Server=sqlserver,1433;Database=EmployeeDB;User Id=sa;Password=YourStrongPassword;TrustServerCertificate=True;"
+    volumes:
+      - .:/app
+      - ~/logs:/app/logs
+
+volumes:
+  sql_data:
