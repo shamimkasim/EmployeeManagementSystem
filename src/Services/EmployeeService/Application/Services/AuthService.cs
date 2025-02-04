@@ -1,14 +1,9 @@
 ﻿using EmployeeManagementSystem.Application.DTOs.Requests;
 using EmployeeManagementSystem.Application.DTOs.Responses;
 using EmployeeManagementSystem.Application.Interfaces;
-using EmployeeManagementSystem.Domain.Entities;
 using EmployeeManagementSystem.Domain.Factories;
 using EmployeeManagementSystem.Domain.Interfaces;
-using System;
-using System.Threading.Tasks;
 using EmployeeManagementSystem.Domain.ValueObjects;
-using EmployeeManagementSystem.Domain.Enums;
-using EmployeeManagementSystem.Domain.Helpers;
 
 namespace EmployeeManagementSystem.Application.Services
 {
@@ -54,10 +49,10 @@ namespace EmployeeManagementSystem.Application.Services
             );
 
             await _employeeRepository.AddAsync(employee);
-           
+
             Console.WriteLine($"Employee Created: Id={employee?.Id}, Email={employee?.Email}, RoleId={employee?.RoleId}");
 
-             if (employee == null || employee.Id == Guid.Empty || string.IsNullOrEmpty(employee.Email))
+            if (employee == null || employee.Id == Guid.Empty || string.IsNullOrEmpty(employee.Email))
             {
                 throw new NullReferenceException("Invalid Employee object before generating token.");
             }

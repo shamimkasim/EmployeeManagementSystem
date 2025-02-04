@@ -17,22 +17,17 @@ public static class InfrastructureDI
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // ✅ Database Context - Fixed Name 
         services.AddDbContext<AppDbContext>(options =>
              options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        // ✅ Repositories (Including Missing RoleRepository)
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-        services.AddScoped<IRoleRepository, RoleRepository>(); // 🆕 Added Role Repository
+        services.AddScoped<IRoleRepository, RoleRepository>();
 
-        // ✅ Authentication & Security
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 
-        // ✅ AutoMapper Registration (Was Missing)
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-        // ✅ MediatR & FluentValidation
         services.AddMediatR(cfg =>
         {
             cfg.RequestExceptionActionProcessorStrategy = MediatR.RequestExceptionActionProcessorStrategy.ApplyForUnhandledExceptions;

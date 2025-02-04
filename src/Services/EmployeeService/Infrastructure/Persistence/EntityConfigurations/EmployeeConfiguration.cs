@@ -1,5 +1,4 @@
 ﻿using EmployeeManagementSystem.Domain.Entities;
-using EmployeeManagementSystem.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -35,15 +34,13 @@ namespace EmployeeManagementSystem.Infrastructure.Persistence.EntityConfiguratio
             builder.Property(e => e.RoleId)
                    .IsRequired();
 
-            
+
             builder.OwnsOne(e => e.PhoneNumber, phone =>
             {
-                phone.Property(p => p.Number)   
+                phone.Property(p => p.Number)
                      .HasColumnName("PhoneNumber")
                      .IsRequired();
             });
-
-             
             builder.HasOne(e => e.Role)
                    .WithMany()
                    .HasForeignKey(e => e.RoleId);

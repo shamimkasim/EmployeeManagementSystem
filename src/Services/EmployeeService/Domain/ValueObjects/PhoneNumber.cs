@@ -1,16 +1,11 @@
-using System;
 using System.Text.RegularExpressions;
 
 namespace EmployeeManagementSystem.Domain.ValueObjects
 {
     public class PhoneNumber
     {
-        private static readonly Regex PhoneNumberRegex = new(@"^\+?\d{7,15}$");  
-
+        private static readonly Regex PhoneNumberRegex = new(@"^\+?\d{7,15}$");
         public string Number { get; private set; }
-
-       
-        private PhoneNumber() { }
 
         public PhoneNumber(string number)
         {
@@ -22,7 +17,6 @@ namespace EmployeeManagementSystem.Domain.ValueObjects
 
             Number = number;
         }
-
         public override string ToString() => Number;
     }
 }

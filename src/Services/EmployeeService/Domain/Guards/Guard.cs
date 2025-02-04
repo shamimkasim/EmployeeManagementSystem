@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace EmployeeManagementSystem.Domain.Guards
 {
@@ -25,22 +24,19 @@ namespace EmployeeManagementSystem.Domain.Guards
                 throw new ArgumentException($"{fieldName} is not a valid email address.");
             }
         }
-
         public static void AgainstUnderAge(DateTime birthDate, int minAge, string fieldName)
         {
             if (birthDate > DateTime.UtcNow.AddYears(-minAge))
                 throw new ArgumentException($"{fieldName} must be at least {minAge} years old.");
         }
-
         public static void AgainstInvalidPhoneNumber(string phoneNumber, string fieldName)
         {
             if (string.IsNullOrWhiteSpace(phoneNumber) ||
-                !Regex.IsMatch(phoneNumber, @"^\+?[1-9]\d{9,14}$"))  // Supports international formats
+                !Regex.IsMatch(phoneNumber, @"^\+?[1-9]\d{9,14}$"))
             {
                 throw new ArgumentException($"{fieldName} is not a valid phone number.");
             }
         }
-
         public static void AgainstNegativeOrZero(decimal value, string fieldName)
         {
             if (value <= 0)

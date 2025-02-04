@@ -1,6 +1,5 @@
 using EmployeeManagementSystem.Application.DTOs.Requests;
 using EmployeeManagementSystem.Application.DTOs.Responses;
-using System.Threading.Tasks;
 
 namespace EmployeeManagementSystem.Application.Interfaces
 {

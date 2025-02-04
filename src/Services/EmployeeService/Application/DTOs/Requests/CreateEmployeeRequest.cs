@@ -1,8 +1,3 @@
-using EmployeeManagementSystem.Domain.Enums;
-using EmployeeManagementSystem.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-
 namespace EmployeeManagementSystem.Application.DTOs.Requests
 {
     public class CreateEmployeeRequest

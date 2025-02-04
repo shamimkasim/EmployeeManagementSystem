@@ -1,6 +1,5 @@
-﻿using FluentValidation;
-using EmployeeManagementSystem.Application.CQRS.Commands;
-using EmployeeManagementSystem.Application.CQRS.Handlers;
+﻿using EmployeeManagementSystem.Application.CQRS.Handlers;
+using FluentValidation;
 
 namespace EmployeeManagementSystem.Application.Validation
 {

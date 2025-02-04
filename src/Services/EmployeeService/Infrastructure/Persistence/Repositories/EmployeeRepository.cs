@@ -12,30 +12,26 @@ namespace EmployeeManagementSystem.Infrastructure.Persistence.Repositories
         {
             _context = context;
         }
-
         public async Task<Employee?> GetByIdAsync(Guid id)
         {
             return await _context.Employees
          .Include(e => e.Role)
          .FirstOrDefaultAsync(e => e.Id == id);
         }
-
         public async Task<Employee?> GetByEmailAsync(string email)
         {
             return await _context.Employees.FirstOrDefaultAsync(e => e.Email == email);
         }
-
         public async Task<List<Employee>> GetAllAsync()
         {
             return await _context.Employees.ToListAsync();
         }
-
         public async Task AddAsync(Employee employee)
         {
             await _context.Employees.AddAsync(employee);
             await _context.SaveChangesAsync();
 
-             
+
             employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == employee.Id);
 
             if (employee == null)
@@ -46,7 +42,6 @@ namespace EmployeeManagementSystem.Infrastructure.Persistence.Repositories
             _context.Employees.Update(employee);
             await _context.SaveChangesAsync();
         }
-
         public async Task DeleteAsync(Guid id)
         {
             var employee = await GetByIdAsync(id);

@@ -1,24 +1,25 @@
 ﻿using EmployeeManagementSystem.Domain.Enums;
-using System;
-using System.Collections.Generic;
 
-namespace EmployeeManagementSystem.Domain.Helpers;
-
-public static class RoleHelper
+namespace EmployeeManagementSystem.Domain.Helpers
 {
-    private static readonly Dictionary<EmployeeRole, Guid> RoleMappings = new()
+    public static class RoleHelper
     {
-        { EmployeeRole.Employee, new Guid("00000000-0000-0000-0000-000000000001") },
-        { EmployeeRole.Manager, new Guid("00000000-0000-0000-0000-000000000002") },
-        { EmployeeRole.Director, new Guid("00000000-0000-0000-0000-000000000003") },
-        { EmployeeRole.Admin, new Guid("00000000-0000-0000-0000-000000000004") }
-    };
+        private static readonly Dictionary<EmployeeRole, Guid> RoleMappings = new()
+        {
+            { EmployeeRole.Employee, Guid.Parse("00000000-0000-0000-0000-000000000001") },
+            { EmployeeRole.Manager, Guid.Parse("00000000-0000-0000-0000-000000000002") },
+            { EmployeeRole.Director, Guid.Parse("00000000-0000-0000-0000-000000000003") },
+            { EmployeeRole.Admin, Guid.Parse("00000000-0000-0000-0000-000000000004") }
+        };
 
-    public static Guid GetRoleIdFromEnum(EmployeeRole role)
-    {
-        if (!RoleMappings.ContainsKey(role))
-            throw new ArgumentException("Invalid role provided");
+        public static Guid GetRoleIdFromEnum(EmployeeRole role)
+        {
+            if (RoleMappings.TryGetValue(role, out var roleId))
+            {
+                return roleId;
+            }
 
-        return RoleMappings[role];
+            throw new ArgumentException($"Invalid role provided: {role}");
+        }
     }
 }
