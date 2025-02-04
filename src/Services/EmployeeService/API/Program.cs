@@ -11,16 +11,13 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-// Configure Database Context
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
-// Register Services
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(configuration);
 
-// CORS Policy
 const string CorsPolicy = "AllowAll";
 builder.Services.AddCors(options =>
 {
@@ -30,11 +27,9 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader());
 });
 
-// Configure Controllers & API Exploration
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// Configure Swagger for JWT Authentication
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Employee Management API", Version = "v1" });
@@ -57,14 +52,13 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Configure Authentication & Authorization
 var jwtSettings = configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not found."));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment(); // Secure in production
+        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -82,8 +76,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
-
-// Middleware Execution Order
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors(CorsPolicy);
