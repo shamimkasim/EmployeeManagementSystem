@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagementSystem.Do
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagementSystem.Infrastructure", "src\Services\EmployeeService\Infrastructure\EmployeeManagementSystem.Infrastructure.csproj", "{AAC9BB98-7B4D-4A87-9B5B-8D4EF7B6B57B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagementSystem.Tests", "src\Services\EmployeeService\Tests\UnitTests\EmployeeManagementSystem.Tests\EmployeeManagementSystem.Tests.csproj", "{1BB621D6-2DAB-4C40-AD48-E50329E289C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{AAC9BB98-7B4D-4A87-9B5B-8D4EF7B6B57B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAC9BB98-7B4D-4A87-9B5B-8D4EF7B6B57B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAC9BB98-7B4D-4A87-9B5B-8D4EF7B6B57B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BB621D6-2DAB-4C40-AD48-E50329E289C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BB621D6-2DAB-4C40-AD48-E50329E289C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BB621D6-2DAB-4C40-AD48-E50329E289C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BB621D6-2DAB-4C40-AD48-E50329E289C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
