@@ -17,6 +17,7 @@ namespace EmployeeManagementSystem.Application.CQRS.Handlers
         {
             await _employeeRepository.DeleteAsync(request.EmployeeId);
             return true;
+
         }
     }
 }
